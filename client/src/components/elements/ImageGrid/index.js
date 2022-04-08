@@ -1,6 +1,6 @@
 import { address } from "../../../assets/data";
 
-function GalleryGrid({ currentGridData }) {
+function ImageGrid({ currentGridData, address }) {
   return (
     <section className="card-setup image-grid py-6 justify-center">
       {currentGridData.map((item, index) => {
@@ -11,7 +11,7 @@ function GalleryGrid({ currentGridData }) {
           >
             <img
               className=" "
-              src={`${address[0].url}${item.photo}`}
+              src={`${address.url}${item.photo}`}
               alt="gridimage"
             />
           </div>
@@ -21,4 +21,4 @@ function GalleryGrid({ currentGridData }) {
   );
 }
 
-export default GalleryGrid;
+export default ImageGrid;
