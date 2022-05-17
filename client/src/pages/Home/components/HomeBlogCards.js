@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 function HomeBlogCards({ currentGridData }) {
   const PF = address[1].url;
+
   return (
     <section className="flex flex-col gap-form max-w-7xl">
       {currentGridData.map((post, index) => {
