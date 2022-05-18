@@ -27,7 +27,7 @@ function ImageGrid({
                 <div className="w-full h-full block overflow-hidden aspect-square">
                   <img
                     className="w-full h-full hover:animate-sliderImage object-cover aspect-square"
-                    src={`${address.url}${item.photo}`}
+                    src={`${item.photo}`}
                     alt="Potrait Bilderraster Inhalt"
                   />
                 </div>
@@ -36,7 +36,7 @@ function ImageGrid({
                     <svg
                       aria-label="delete image"
                       onClick={() => {
-                        handleDeleteImg(item._id, item.username);
+                        handleDeleteImg(item._id, item.username, item.photo);
                       }}
                       className="cursor-pointer h-1/3 opacity-70 fill-slate-100 hover:opacity-100 hover:fill-red-400 transition-color duration-300"
                       xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +66,7 @@ function ImageGrid({
                   <div className="w-full h-full block overflow-hidden aspect-square">
                     <motion.img
                       className="w-full h-full hover:animate-sliderImage object-cover aspect-square"
-                      src={`${address.url}${item.photo}`}
+                      src={`${item.photo}`}
                       alt="Bilderraster Inhalt"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
@@ -74,6 +74,7 @@ function ImageGrid({
                       whileInView="visible"
                       viewport={{ once: true }}
                     />
+                    {console.log(item.photo)}
                   </div>
                 </div>
               </AnimatePresence>
