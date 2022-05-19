@@ -6,7 +6,7 @@ import DeleteModal from "../../components/elements/DeleteModal/DeleteModal";
 import ErrorMsg from "../../components/elements/ErrorMsg/ErrorMsg";
 
 import TransitionWrapper from "../../utility/TransitionWrapper";
-import { apiroutes } from "../../assets/data";
+import { apiroutes, firebaseBaseUrl } from "../../assets/data";
 import { useAuthContext } from "../../utility/AuthContextProvider";
 import getImageOrientation from "../../utility/getImageOrientation";
 
@@ -14,6 +14,8 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
 import ProgressBar from "../../components/elements/ProgressBar/ProgressBar";
+import { projectStorage } from "../../utility/firebase";
+import { deleteObject, ref } from "firebase/storage";
 
 function SinglePostUpdate() {
   const fileRef = useRef();
@@ -63,58 +65,78 @@ function SinglePostUpdate() {
   };
 
   //Handler for updating singlepost
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-
+  const handleUpdateImage = async (e) => {
     // Restriction for files: jpeg,jpg and png only, also the size has to be
     // maximal 3000000 ( 3mb )
-    if (file) {
-      if (file.name.match(/\.(jpeg|jpg|png)$/) && file.size <= 3000000) {
-        setSelected(file);
-      } else {
-        setIsError("Die Datei ist zu gross!");
-        setFile(null);
-      }
+    if (
+      e.target.files[0].name.match(/\.(jpeg|jpg|png)$/) &&
+      e.target.files[0].size <= 3000000
+    ) {
+      setSelected(e.target.files[0]);
+    } else {
+      setIsError("Die Datei ist zu gross!");
+      setFile(null);
     }
   };
 
-  useEffect(() => {
-    if (url === undefined) return;
+  const handleUpdate = async (e) => {
+    e.preventDefault();
 
-    const handleMdb = async () => {
-      const headers = {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${userCreds.token}`,
-      };
-
-      const newPost = {
-        username: userCreds.name,
-        title: title,
-        desc: desc,
-        photo: url,
-        orientation: orientation,
-      };
-
-      //Updating post on MongoDB
-      try {
-        await axios.put(`${apiroutes[2].url}${post._id}`, newPost, {
-          headers: headers,
-        });
-        navigate("/post" + post._id);
-      } catch (err) {
-        setIsError("standard");
-      }
-      setIsError(false);
+    const headers = {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${userCreds.token}`,
     };
 
-    handleMdb();
-  }, [url, userCreds, navigate, desc, title, orientation]);
+    const newPost = {
+      username: userCreds.name,
+      title: title,
+      desc: desc,
+      photo: url,
+      orientation: orientation,
+    };
+
+    //Updating post on MongoDB
+    try {
+      await axios.put(`${apiroutes[2].url}${post._id}`, newPost, {
+        headers: headers,
+      });
+      navigate("/post" + post._id);
+    } catch (err) {
+      setIsError("standard");
+    }
+    setIsError(false);
+  };
 
   // Handler for getting image orientation
   const handleInput = async (e) => {
     setFile(e.target.files[0]);
     let imgOrientation = await getImageOrientation(e.target.files);
     setOrientation(imgOrientation);
+    handleUpdateImage(e);
+  };
+
+  //delete image if u want another
+  const handleOtherImage = async () => {
+    const firebaseImageId = url
+      .split(firebaseBaseUrl)[1]
+      .split("F")[1]
+      .split("?")[0];
+
+    // Create a reference to the file to delete
+    const deleteRef = ref(projectStorage, "posts");
+
+    const imageRef = ref(deleteRef, firebaseImageId);
+
+    // Delete the file
+    deleteObject(imageRef)
+      .then(() => {
+        setIsError(false);
+      })
+      .catch((error) => {
+        setIsError(
+          "Das Bild konnte nicht gelöscht werden. Versuche es später noch einmal!"
+        );
+      });
   };
 
   const deleteHandler = () => setShowModal(true);
@@ -132,6 +154,8 @@ function SinglePostUpdate() {
                     onClick={() => {
                       setFile(null);
                       fileRef.current.value = null;
+                      handleOtherImage();
+                      setUrl(null);
                     }}
                   >
                     <BasicImage file={file} />
