@@ -6,19 +6,24 @@ import DeleteModal from "../../components/elements/DeleteModal/DeleteModal";
 import ErrorMsg from "../../components/elements/ErrorMsg/ErrorMsg";
 
 import TransitionWrapper from "../../utility/TransitionWrapper";
-import { address, apiroutes } from "../../assets/data";
+import { apiroutes } from "../../assets/data";
 import { useAuthContext } from "../../utility/AuthContextProvider";
 import getImageOrientation from "../../utility/getImageOrientation";
 
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
+import ProgressBar from "../../components/elements/ProgressBar/ProgressBar";
 
 function SinglePostUpdate() {
   const fileRef = useRef();
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [orientation, setOrientation] = useState(1);
+  const [title, setTitle] = useState();
+  const [desc, setDesc] = useState();
+  const [url, setUrl] = useState();
+  const [selected, setSelected] = useState();
   const [post, setPost] = useState();
   const [showModal, setShowModal] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -27,7 +32,6 @@ function SinglePostUpdate() {
 
   const location = useLocation();
   const path = location.pathname.split("singlepostupdate")[1];
-  const PF = address[1].url;
 
   // Fetching singlepost from API
   useEffect(() => {
@@ -62,50 +66,49 @@ function SinglePostUpdate() {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    const { title, desc } = e.target.elements;
-
-    const newPost = {
-      username: userCreds.name,
-      title: title.value,
-      desc: desc.value,
-      photo: post.photo,
-    };
-
-    const headers = {
-      "Content-Type": "application/json",
-      authorization: `Bearer ${userCreds.token}`,
-    };
-
+    // Restriction for files: jpeg,jpg and png only, also the size has to be
+    // maximal 3000000 ( 3mb )
     if (file) {
       if (file.name.match(/\.(jpeg|jpg|png)$/) && file.size <= 3000000) {
-        const data = new FormData();
-        const filename = Date.now() + file.name;
-        data.append("name", filename);
-        data.append("file", file);
-        newPost.photo = filename;
-        newPost.orientation = orientation;
-        //Uploading file to server
-        try {
-          await axios.post(apiroutes[3].url, data, {
-            headers: headers,
-          });
-        } catch (err) {
-          setIsError("standard");
-        }
+        setSelected(file);
       } else {
         setIsError("Die Datei ist zu gross!");
+        setFile(null);
       }
     }
-    //Updating post on MongoDB
-    try {
-      await axios.put(`${apiroutes[2].url}${post._id}`, newPost, {
-        headers: headers,
-      });
-      navigate("/post" + post._id);
-    } catch (err) {
-      setIsError("standard");
-    }
   };
+
+  useEffect(() => {
+    if (url === undefined) return;
+
+    const handleMdb = async () => {
+      const headers = {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${userCreds.token}`,
+      };
+
+      const newPost = {
+        username: userCreds.name,
+        title: title,
+        desc: desc,
+        photo: url,
+        orientation: orientation,
+      };
+
+      //Updating post on MongoDB
+      try {
+        await axios.put(`${apiroutes[2].url}${post._id}`, newPost, {
+          headers: headers,
+        });
+        navigate("/post" + post._id);
+      } catch (err) {
+        setIsError("standard");
+      }
+      setIsError(false);
+    };
+
+    handleMdb();
+  }, [url, userCreds, navigate, desc, title, orientation]);
 
   // Handler for getting image orientation
   const handleInput = async (e) => {
@@ -144,11 +147,7 @@ function SinglePostUpdate() {
                       setIsError(false);
                     }}
                   >
-                    <BasicImage
-                      image={post.photo}
-                      alt="Blog Post Bild"
-                      path={PF}
-                    />
+                    <BasicImage image={post.photo} alt="Blog Post Bild" />
                     <h4>Klick hier, wenn du das Titel Bild ändern möchtest!</h4>
                   </div>
                 )}
@@ -160,6 +159,14 @@ function SinglePostUpdate() {
                   multiple={false}
                   ref={fileRef}
                 />
+                {selected && (
+                  <ProgressBar
+                    selected={selected}
+                    setSelected={setSelected}
+                    setUrl={setUrl}
+                    folder="posts"
+                  />
+                )}
               </div>
               <form
                 onSubmit={handleUpdate}
@@ -172,6 +179,7 @@ function SinglePostUpdate() {
                     defaultValue={post.title}
                     type="text"
                     required
+                    onChange={(e) => setTitle(e.target.value)}
                   />
                   <label htmlFor="title">Bitte gib einen Titel ein</label>
                 </div>
@@ -181,6 +189,7 @@ function SinglePostUpdate() {
                     defaultValue={post.desc}
                     className="h-96 pt-2"
                     required
+                    onChange={(e) => setDesc(e.target.value)}
                   />
                   <label htmlFor="desc">Bitte gib eine Nachricht ein</label>
                 </div>
