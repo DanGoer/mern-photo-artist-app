@@ -9,6 +9,7 @@ export const navLinks = [
   { name: "Stories", link: "/stories" },
   { name: "Kontakt", link: "/contact" },
   { name: "Impressum", link: "/impressum" },
+  { name: "Login", link: "/login" },
 ];
 
 // Social-icon list for NavBar and Impressum
@@ -86,7 +87,7 @@ export const firebaseBaseUrl =
 
 // Backend server address
 
-const server = "https://agophotography.netlify.app/";
+const server = "https://agophotography.herokuapp.com/";
 
 // Server side addresslist for API requests
 // [0] = Gallery route (/ = post, /:id = get, delete, /photos = get )
