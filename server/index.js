@@ -11,9 +11,13 @@ const postRoute = require("./routes/posts");
 const contactRoute = require("./routes/contact");
 const decodeIDToken = require("./utility/authenticateToken");
 
+const corsOptions = {
+  origin: process.env.CORS,
+};
+
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(decodeIDToken);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -40,7 +44,7 @@ app.use("/api/stories", storyRoute);
 app.use("/api/gallery", galleryRoute);
 
 //When running on digital ocean, use process.env.PORT
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 2000;
 app.listen(port, () => {
   console.log(`Server Running on port: ${port}`);
 });
