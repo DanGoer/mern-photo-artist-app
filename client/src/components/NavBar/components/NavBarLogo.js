@@ -1,6 +1,6 @@
 // Logo component for NavBar
 
-import ago from "../../../assets/images/ago.png";
+import d from "../../../assets/images/D.png";
 
 import { Link } from "react-router-dom";
 
@@ -9,7 +9,7 @@ function NavBarLogo() {
     <Link to="/">
       <img
         className="max-h-20 min-w-[12] navsvghover"
-        src={ago}
+        src={d}
         alt="Logo des Betreibers der Seite"
       />
     </Link>
