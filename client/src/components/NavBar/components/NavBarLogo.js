@@ -1,6 +1,6 @@
 // Logo component for NavBar
 
-import d from "../../../assets/images/D.png";
+import d from "../../../assets/images/D.svg";
 
 import { Link } from "react-router-dom";
 
