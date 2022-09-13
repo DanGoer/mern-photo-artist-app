@@ -153,7 +153,7 @@ function SingleStory() {
   // Handler for input
   const handleInput = async (e) => {
     setFile(e.target.files[0]);
-    executeScroll("end");
+    executeScroll("start");
   };
 
   const handleSelectFile = () => fileRef.current.click();
@@ -167,20 +167,20 @@ function SingleStory() {
     <TransitionWrapper>
       <main>
         <article
-          className={`bg-setup story-bg `}
+          className={`bg-setup story-bg`}
           style={{
             "--background": `url(${story.photo})`,
           }}
         >
           {story ? (
-            <div className="relative w-full flex flex-col items-center justify-start gap-6 md:gap-12">
+            <div className="relative flex flex-col items-center justify-start w-full gap-6 md:gap-12">
               <>
                 <PageHeadLine headline={story.story} />
-                <div className="card-setup py-4 md:py-10">
+                <div className="py-4 card-setup md:py-10">
                   <BasicImage image={story.photo} alt="Einzelnes Story Bild" />
                 </div>
-                <div className="card-setup flex flex-col items-center justify-center gap-2 py-4 md:py-10">
-                  <h5>Author: {story.username}</h5>
+                <div className="flex flex-col items-center justify-center gap-2 py-4 card-setup md:py-10">
+                  <h5>Autor: {story.username}</h5>
                   <hr className="w-full" />
                   <h6>
                     Erstellt am:{" "}
@@ -191,7 +191,7 @@ function SingleStory() {
                     {new Date(story.updatedAt).toLocaleDateString()}
                   </h6>
                 </div>
-                <div className="card-setup flex flex-col items-center justify-center gap-2 py-4 md:py-10">
+                <div className="flex flex-col items-center justify-center gap-2 py-4 card-setup md:py-10">
                   <pre>
                     <p className="whitespace-pre-line">{story.desc}</p>
                   </pre>
@@ -216,7 +216,7 @@ function SingleStory() {
                     />
                     {file && (
                       <div
-                        className="flex flex-col hover:cursor-pointer gap-image text-center card-setup py-4 md:py-10 max-w-7xl"
+                        className="flex flex-col py-4 text-center hover:cursor-pointer gap-image card-setup md:py-10 max-w-7xl"
                         onClick={() => {
                           setFile(null);
                           fileRef.current.value = null;
@@ -299,7 +299,7 @@ function SingleStory() {
               )}
             </div>
           ) : (
-            <div className="relative w-full flex flex-col items-center justify-start gap-6 md:gap-12">
+            <div className="relative flex flex-col items-center justify-start w-full gap-6 md:gap-12">
               <SkeletonPreview />
               <SkeletonGrid />
             </div>

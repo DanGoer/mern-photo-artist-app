@@ -33,7 +33,7 @@ function Login() {
   };
 
   const handleDemo = () => {
-    logInWithEmailAndPassword("danielgoerg1983@gmail.com", "123456");
+    logInWithEmailAndPassword("devgoergens@gmail.com", "123456");
     navigate("/");
   };
 

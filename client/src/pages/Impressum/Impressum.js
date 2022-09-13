@@ -19,7 +19,6 @@ function Impressum() {
         <div className={`bg-setup ${bg}`}>
           <PageHeadLine headline={"Impressum"} />
           <SubText subtext={subtexts.impressum} />
-
           <section className="gap-6 pt-6 pb-40 card-setup">
             <h4>Daniel Goergens Photography</h4>
             <span className="flex flex-col w-full gap-4 px-6">
@@ -28,7 +27,7 @@ function Impressum() {
               <address>
                 Daniel Goergens
                 <br />
-                Dorstener Strasse 534
+                Dorstener Straße 534
                 <br />
                 46119 Oberhausen
               </address>
@@ -37,15 +36,7 @@ function Impressum() {
               <h5>Kontakt:</h5>
               <hr />
               <address>
-                E-Mail: danielgoer1983@gmail@gmail.com <br />
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline navsvghover"
-                  href="https://www.linkedin.com/in/da-g-a613a1242/"
-                >
-                  My Profil
-                </a>
+                E-Mail: danielgoe1983@gmail.com <br />
               </address>
               <hr />
             </span>
@@ -53,7 +44,7 @@ function Impressum() {
               <h5>Haftungsausschluss</h5>
               <hr />
               <p>
-                Für den Inhalt der Webseite: www.artist.dangoer.com ist Daniel
+                Für den Inhalt der Webseite: www.artist.dangoer.de ist Daniel
                 Goergens verantwortlich. Die Webseite wird rein privat betrieben
                 und hat keinerlei kommerzielle Interessen.
                 <br />

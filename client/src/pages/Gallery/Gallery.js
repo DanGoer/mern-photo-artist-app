@@ -158,7 +158,7 @@ function Gallery() {
             <>
               {file && (
                 <div
-                  className="flex flex-col hover:cursor-pointer gap-image text-center card-setup py-4 md:py-10 max-w-7xl"
+                  className="flex flex-col py-4 text-center hover:cursor-pointer gap-image card-setup md:py-10 max-w-7xl"
                   onClick={() => {
                     setFile(null);
                     fileRef.current.value = null;
